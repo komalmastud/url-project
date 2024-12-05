@@ -21,7 +21,9 @@ async function handleGenerateNewShortURL(req, res) {
     });
 
     // Respond with the generated short URL ID
-    return res.json({ id: shortID });
+    return res.render("home", {
+      id: shortID,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Error creating short URL" });

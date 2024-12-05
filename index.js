@@ -1,7 +1,10 @@
 const express = require("express");
+const path = require("path");
+const mongoose = require("mongoose");
 const { connectToMongoDB } = require("./connect");
 const URL = require("./models/url");
 const urlRoute = require("./routes/url");
+const staticRouter = require("./routes/staticRouter");
 const app = express();
 const PORT = 8002;
 
@@ -10,12 +13,32 @@ connectToMongoDB("mongodb://localhost:27017/short-url")
   .then(() => console.log("Mongodb connected"))
   .catch((err) => console.error("Failed to connect to MongoDB:", err));
 
-// Middleware
+app.set("view engine", "ejs");
+app.set("views", path.resolve("./views"));
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Home route to render the URL list (make sure this is correct in your staticRouter)
+app.get("/", async (req, res) => {
+  try {
+    // Fetch all URLs from the database
+    const urls = await URL.find({});
+
+    // Render the home.ejs template with the 'urls' data
+    res.render("home", { urls: urls });
+  } catch (err) {
+    console.error("Error fetching URLs:", err);
+    res.status(500).send("Server error");
+  }
+});
+
+// Use routes for URLs and static content
 app.use("/url", urlRoute);
+app.use("/", staticRouter);
 
 // Redirect request handler
-app.get("/:shortId", async (req, res) => {
+app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
 
   try {
