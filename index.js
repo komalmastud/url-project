@@ -1,7 +1,9 @@
 const express = require("express");
 const path = require("path");
+const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const { connectToMongoDB } = require("./connect");
+const { restrictToLoggedinUserOnly, checkAuth } = require("./middlewares/auth");
 const URL = require("./models/url");
 const urlRoute = require("./routes/url");
 const staticRouter = require("./routes/staticRouter");
@@ -19,6 +21,7 @@ app.set("views", path.resolve("./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // Home route to render the URL list (make sure this is correct in your staticRouter)
 app.get("/", async (req, res) => {
@@ -35,10 +38,10 @@ app.get("/", async (req, res) => {
 });
 
 // Use routes for URLs and static content
-app.use("/url", urlRoute);
+app.use("/url", restrictToLoggedinUserOnly, urlRoute);
 app.use("/user", userRoute);
 
-app.use("/", staticRouter);
+app.use("/", checkAuth, staticRouter);
 
 // Redirect request handler
 app.get("/url/:shortId", async (req, res) => {

@@ -3,8 +3,8 @@ const { handleUserSignup, handleUserLogin } = require("../controllers/user"); //
 
 const router = express.Router();
 
-// Correct function names
-router.post("/", handleUserSignup);
-router.post("/login", handleUserLogin);
+// Correct the signup route to be "/signup" for clarity
+router.post("/signup", handleUserSignup); // Signup route
+router.post("/login", handleUserLogin); // Login route
 
 module.exports = router;

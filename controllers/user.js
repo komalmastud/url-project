@@ -1,17 +1,11 @@
+// controllers/user.js
+const { v4: uuidv4 } = require("uuid");
 const User = require("../models/user");
 
 async function handleUserSignup(req, res) {
   const { name, email, password } = req.body;
-
   try {
-    // Create a new user in the database
-    await User.create({
-      name,
-      email,
-      password,
-    });
-
-    // Redirect to the home page after successful signup
+    await User.create({ name, email, password });
     return res.render("home");
   } catch (err) {
     console.error("Error during signup:", err);
@@ -21,22 +15,14 @@ async function handleUserSignup(req, res) {
 
 async function handleUserLogin(req, res) {
   const { email, password } = req.body;
-
   try {
-    // Find a user by email and password
-    const user = await User.findOne({
-      email,
-      password,
-    });
-
-    // Check if the user was found
+    const user = await User.findOne({ email, password });
+    console.log("User:", user);
     if (!user) {
-      return res.render("login", {
-        error: "Invalid username or password", // Corrected error message formatting
-      });
+      return res.render("login", { error: "Invalid username or password" });
     }
-
-    // Redirect to the home page after successful login
+    const sessionId = uuidv4();
+    res.cookie("uid", sessionId);
     return res.redirect("/");
   } catch (err) {
     console.error("Error during login:", err);

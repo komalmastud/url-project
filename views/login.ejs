@@ -11,12 +11,14 @@
     <title>Login</title>
   </head>
   <body>
-    <h1>Login page</h1>
+    <h1>Login Page</h1>
     <form action="/user/login" method="post">
-      <label>Email</label>
-      <input type="text" required name="email" />
-      <label>Password</label>
-      <input type="text" required name="password" />
+      <!-- Correctly associating label with input using 'for' and 'id' -->
+      <label for="email">Email</label>
+      <input type="email" required name="email" id="email" />
+
+      <label for="password">Password</label>
+      <input type="password" required name="password" id="password" />
 
       <button type="submit">Login</button>
     </form>
