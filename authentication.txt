@@ -1,0 +1,12 @@
+Authentication Patterens 
+
+Statefull And Stateless
+
+*statefull
+1. which Maintains
+2.state or data or server side 
+
+
+*stateless
+which has no state
+

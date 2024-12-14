@@ -5,6 +5,7 @@ const { connectToMongoDB } = require("./connect");
 const URL = require("./models/url");
 const urlRoute = require("./routes/url");
 const staticRouter = require("./routes/staticRouter");
+const userRoute = require("./routes/user");
 const app = express();
 const PORT = 8002;
 
@@ -35,6 +36,8 @@ app.get("/", async (req, res) => {
 
 // Use routes for URLs and static content
 app.use("/url", urlRoute);
+app.use("/user", userRoute);
+
 app.use("/", staticRouter);
 
 // Redirect request handler
